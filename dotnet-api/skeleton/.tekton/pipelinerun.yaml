@@ -38,17 +38,9 @@ spec:
     - name: revision
       value: "{{ revision }}"
     - name: registry-url
-      value: quay.io/cbennett/dotnet-demo-app
+      value: quay.io/cbennett/rhdh-dotnet-demo
     - name: package
       value: "."
-    - name: sonar-host-url
-      value: https://sonarcloud.io
-    - name: sonar-project-key
-      value: col1985_dotnet-demo-app
-    - name: sonar-organization
-      value: col1985
-    - name: src-to-scan
-      value: .
   workspaces:
     - name: shared-workspace
       volumeClaimTemplate:
