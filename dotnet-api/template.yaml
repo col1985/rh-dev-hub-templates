@@ -1,12 +1,13 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: dotnet-frontend-template
-  title: Create a .NET Frontend application with a CI pipeline
-  description: Create a starter .NET frontend application with ArgoCD and a Tekton Pipeline
+  name: dotnet-api-template
+  title: Create a .NET Todo API service with a CI pipeline
+  description: Create a starter .NET Todo API service with ArgoCD and a Tekton Pipeline
   tags:
     - recommended
     - dotnet
+    - api
 spec:
   owner: rhdh
   type: service
@@ -24,7 +25,7 @@ spec:
           title: Name
           type: string
           description: Unique name of the component
-          default: my-dotnet-app
+          default: my-dotnet-api
           ui:field: EntityNamePicker
           maxLength: 23
         description:
@@ -59,9 +60,9 @@ spec:
           title: Repo Host
           type: string
           description: Your SCM host
-          default: gitlab-gitlab.apps.cluster-k98br.dynamic.redhatworkshops.io
+          default: repo.dynamic.redhatworkshops.io
           enum:
-            - gitlab-gitlab.apps.cluster-k98br.dynamic.redhatworkshops.io
+            - grepo.dynamic.redhatworkshops.io
         owner:
           title: Repo Owner
           type: string
@@ -104,12 +105,12 @@ spec:
                   title: Image Host
                   type: string
                   description: Host for storing image
-                  default: quay-k98br.apps.cluster-k98br.dynamic.redhatworkshops.io
+                  default: quay.dynamic.redhatworkshops.io
                 image_organization:
                   title: Organization
                   type: string
                   description: Name of the Quay Organization
-                  default: quayadmin
+                  default: admin
                 image_tag:
                   title: Image Tag
                   default: latest
@@ -130,7 +131,7 @@ spec:
           namespace: ${{ parameters.component_id }}-dev
           group_id: ${{ parameters.group_id }}
           owner: ${{ user.entity.metadata.name }}
-          cluster: .apps.cluster-k98br.dynamic.redhatworkshops.io
+          cluster: .apps.dynamic.redhatworkshops.io
           host: ${{ parameters.host }}
           destination: ${{ parameters.owner }}/${{ parameters.component_id }}
           quay_destination: ${{ parameters.image_organization}}/${{ parameters.component_id }}
@@ -179,7 +180,7 @@ spec:
           source_repository: https://${{ parameters.host }}/${{ parameters.owner }}/${{parameters.component_id}}.git
           repository_name: ${{ parameters.component_id }}
           git_owner: "user1"
-          cluster: .apps.cluster-k98br.dynamic.redhatworkshops.io
+          cluster: .apps.dynamic.redhatworkshops.io
           namespace: ${{ parameters.component_id }}-dev
           image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
