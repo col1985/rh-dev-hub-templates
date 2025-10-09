@@ -60,16 +60,14 @@ spec:
           title: Repo Host
           type: string
           description: Your SCM host
-          default: repo.dynamic.redhatworkshops.io
-          enum:
-            - grepo.dynamic.redhatworkshops.io
+          default: add SCM repo host here
+          # enum:
+          #   - grepo.dynamic.redhatworkshops.io
         owner:
           title: Repo Owner
           type: string
           description: Your SCM host organization/group
           default: development
-          enum:
-            - development
     - title: Provide Image Registry Information
       required:
         - image_registry
@@ -110,7 +108,7 @@ spec:
                   title: Organization
                   type: string
                   description: Name of the Quay Organization
-                  default: admin
+                  default: myadmin
                 image_tag:
                   title: Image Tag
                   default: latest
