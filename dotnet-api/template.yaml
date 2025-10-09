@@ -115,7 +115,8 @@ spec:
         - cluster
       properties:
         cluster:
-          title: Image Registry
+          title: Cluster Host URL
+          description: OpenShift Cluster Host (omit the apps prefix)
           type: string
   steps:
     - id: template
