@@ -23,6 +23,22 @@ spec:
     - description: Component id
       name: component-id
       type: string
+    - description: Path to Dockerfile
+      name: dockerfile
+      type: string
+      default: ./Dockerfile
+    - description: Image format, e.g. docker
+      name: format
+      type: string
+      default: docker
+    - description: Additional build args
+      name: extra-build-args
+      type: string
+      default: "--format docker"
+    - description: Skip pushing the image
+      name: skip-push
+      default: "false"
+      type: string
   tasks:
     - name: git-clone
       params:
@@ -36,31 +52,29 @@ spec:
       workspaces:
         - name: output
           workspace: source-folder
-    # - name: package
-    #   runAfter:
-    #     - git-clone
-    #   taskRef:
-    #     kind: ClusterTask
-    #     name: maven
-    #   workspaces:
-    #     - name: source
-    #       workspace: source-folder
-    #     - name: maven-settings
-    #       workspace: maven-settings
     - name: build-and-push
+      displayName: Build and Push .NET Image
+      taskRef:
+        kind: ClusterTask
+        name: buildah
       params:
         - name: IMAGE
           value: $(params.output-image)
-      runAfter:
-        - package
-      taskRef:
-        kind: Task
-        name: kaniko
+        - name: DOCKERFILE
+          value: $(params.dockerfile)
+        - name: FORMAT
+          value: $(params.format)
+        - name: EXTRA_BUILD_ARGS
+          value: $(params.extra-build-args)
+        - name: SKIP_PUSH
+          value: $(params.skip-push)
       workspaces:
         - name: source
           workspace: source-folder
         - name: dockerconfig
           workspace: docker-config
+      runAfter:
+        - git-clone
     - name: resync
       params:
         - name: COMPONENT_ID
