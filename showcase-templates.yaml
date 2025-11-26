@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: software-templates
+  description: A collection of Backstage templates for Backstage / RH Dev Hub
+spec:
+  type: url
+  targets:
+     - https://github.com/col1985/rh-dev-hub-templates/blob/main/templates/springboot-api/template.yaml
+     - https://github.com/col1985/rh-dev-hub-templates/blob/main/templates/dotnet-api/template.yaml

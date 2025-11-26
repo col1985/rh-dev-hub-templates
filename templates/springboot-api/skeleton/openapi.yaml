@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Demo Application API
+  description: API for the simple Spring Boot application with GET and POST endpoints at /hello.
+  version: 1.0.0
+servers:
+  - url: https://${{values.namespace}}-${{values.namespace}}${{values.cluster}}
+    description: Development Environment
+
+paths:
+  /hello:
+    get:
+      tags:
+        - hello
+      summary: Retrieve a 'Hello World' JSON message
+      description: Returns a predefined MyResponse object for a GET request.
+      operationId: getHello
+      responses:
+        '200':
+          description: Successful retrieval of the JSON response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyResponse'
+              example:
+                message: Hello World!!
+                code: 200
+    post:
+      tags:
+        - hello
+      summary: Process a string payload and return a JSON status
+      description: Accepts a raw string payload and returns a MyResponse object confirming receipt.
+      operationId: postHello
+      requestBody:
+        description: The raw string content to be processed.
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: "Hello from the curl client!"
+      responses:
+        '201':
+          description: Successfully received and processed the string payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyResponse'
+              example:
+                message: Hello from the curl client!
+                code: 201
+
+components:
+  schemas:
+    MyResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A descriptive message about the operation's result.
+          example: A confirmation message
+        code:
+          type: integer
+          format: int32
+          description: An integer status code.
+          example: 200

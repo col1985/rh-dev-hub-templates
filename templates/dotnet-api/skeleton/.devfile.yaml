@@ -1,0 +1,22 @@
+schemaVersion: 2.2.0
+metadata:
+  generateName: dotnet-app
+components:
+  - name: development-tooling
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-277c10c
+      env:
+        - name: DOTNET_VERSION
+          value: "9.0"
+  - name: m2
+    volume:
+      size: 1G
+commands:
+  - id: start-dev
+    exec:
+      label: "Start Development mode"
+      component: development-tooling
+      commandLine: "dotnet run"
+      group:
+        kind: run
+        isDefault: true

@@ -1,0 +1,187 @@
+openapi: 3.0.3
+info:
+  title: Todo API (.NET 8/9)
+  version: v1
+  description: An ASP.NET Core Web API for managing a simple Todo list using in-memory storage.
+
+servers:
+  - url: https://${{values.namespace}}-${{values.namespace}}${{values.cluster}}
+    description: Development Environment
+
+paths:
+  /healthz:
+    get:
+      tags:
+        - Health
+      summary: Get application health status and version
+      operationId: GetHealthStatus
+      responses:
+        '200':
+          description: Health check success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+        '503':
+          description: Service Unavailable (Degraded or Unhealthy)
+
+  /api/Todo:
+    get:
+      tags:
+        - Todo Items
+      summary: Retrieve all Todo items
+      operationId: GetAllTodoItems
+      responses:
+        '200':
+          description: A list of Todo items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TodoItem'
+    post:
+      tags:
+        - Todo Items
+      summary: Create a new Todo item
+      operationId: CreateTodoItem
+      requestBody:
+        description: Todo item to create (Id, CreatedAt, UpdatedAt are ignored)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoItemCreate'
+      responses:
+        '201':
+          description: Todo item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+
+  /api/Todo/{id}:
+    get:
+      tags:
+        - Todo Items
+      summary: Get a Todo item by ID
+      operationId: GetTodoItemById
+      parameters:
+        - name: id
+          in: path
+          description: The GUID of the Todo item to retrieve
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The requested Todo item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoItem'
+        '404':
+          description: Todo item not found
+    put:
+      tags:
+        - Todo Items
+      summary: Update an existing Todo item
+      operationId: UpdateTodoItem
+      parameters:
+        - name: id
+          in: path
+          description: The GUID of the Todo item to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The Todo item data for update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoItemUpdate'
+      responses:
+        '204':
+          description: Todo item updated successfully (No Content)
+        '400':
+          description: Invalid ID or request body
+        '404':
+          description: Todo item not found
+
+components:
+  schemas:
+    TodoItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the Todo item.
+        title:
+          type: string
+          description: The task description.
+        isComplete:
+          type: boolean
+          description: Whether the task is complete.
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the item was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the item was last updated.
+      required:
+        - title
+        - isComplete
+
+    TodoItemCreate:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The task description.
+        isComplete:
+          type: boolean
+          description: Initial completion status (usually false).
+      required:
+        - title
+        - isComplete
+
+    TodoItemUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Must match the ID in the path.
+        title:
+          type: string
+          description: The updated task description.
+        isComplete:
+          type: boolean
+          description: The new completion status.
+      required:
+        - id
+        - title
+        - isComplete
+
+    HealthCheckResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Overall health status (Healthy, Degraded, Unhealthy).
+        version:
+          type: string
+          description: The application's version number.
+        environment:
+          type: string
+          description: The current runtime environment (Development, Production, etc.).
+      required:
+        - status
+        - version
+        - environment
