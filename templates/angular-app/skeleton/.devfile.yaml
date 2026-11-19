@@ -1,0 +1,38 @@
+schemaVersion: 2.2.0
+metadata:
+  generateName: angular-app
+components:
+  - name: development-tooling
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-277c10c
+      memoryLimit: 3Gi
+      endpoints:
+        - exposure: public
+          name: http-angular
+          protocol: http
+          targetPort: 4200
+      env:
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=4096"
+  - name: npm
+    volume:
+      size: 2Gi
+commands:
+  - id: install
+    exec:
+      label: "Install dependencies"
+      component: development-tooling
+      commandLine: "npm install"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+        isDefault: true
+  - id: start-dev
+    exec:
+      label: "Start Development mode"
+      component: development-tooling
+      commandLine: "npx ng serve --host 0.0.0.0 --port 4200"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+        isDefault: true

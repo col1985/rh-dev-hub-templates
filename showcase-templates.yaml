@@ -8,3 +8,4 @@ spec:
   targets:
      - https://github.com/col1985/rh-dev-hub-templates/blob/main/templates/springboot-api/template.yaml
      - https://github.com/col1985/rh-dev-hub-templates/blob/main/templates/dotnet-api/template.yaml
+     - https://github.com/col1985/rh-dev-hub-templates/blob/main/templates/angular-app/template.yaml
